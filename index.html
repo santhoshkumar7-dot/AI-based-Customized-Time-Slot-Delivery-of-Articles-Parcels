@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Based Customized Time Slot Delivery of Articles & Parcels</title>
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+
+    <!-- Global Loader Screen -->
+    <div id="global-loader">
+        <div class="loader-logo">
+            <span style="color: var(--color-primary);">AI</span>-Parcel
+        </div>
+        <div class="loader-spinner"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="container nav-container">
+            <a href="#" class="logo" onclick="navigateTo('home')">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                </div>
+                <span>Logi<span style="color: var(--color-primary);">AI</span></span>
+            </a>
+
+            <!-- Desktop Menu -->
+            <nav class="nav-menu">
+                <a href="#" class="nav-link active" id="nav-home" onclick="navigateTo('home')">Home</a>
+                <a href="#" class="nav-link" id="nav-dashboard" onclick="navigateTo('customer-dashboard')" style="display:none;">Dashboard</a>
+                <a href="#" class="nav-link" id="nav-book" onclick="navigateTo('book-delivery')" style="display:none;">Book</a>
+                <a href="#" class="nav-link" id="nav-track" onclick="navigateTo('track-parcel')" style="display:none;">Track</a>
+                <a href="#" class="nav-link" id="nav-history" onclick="navigateTo('delivery-history')" style="display:none;">History</a>
+                <a href="#" class="nav-link" id="nav-analytics" onclick="navigateTo('ai-analytics')" style="display:none;">Analytics</a>
+                <a href="#" class="nav-link" id="nav-admin" onclick="navigateTo('admin-panel')" style="display:none;">Admin</a>
+                <a href="#" class="nav-link" id="nav-settings" onclick="navigateTo('settings')">Settings</a>
+            </nav>
+
+            <!-- Nav Controls -->
+            <div class="nav-controls">
+                <!-- Theme Switcher Button -->
+                <button class="btn-icon" onclick="toggleTheme()" title="Toggle Dark/Light Mode">
+                    <svg id="sun-icon" viewBox="0 0 24 24" style="display:none; width:20px; height:20px; fill:currentColor;"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41zm-12.37 12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41z"/></svg>
+                    <svg id="moon-icon" viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10 0-4.7 3.3-8.8 8.1-9.7.5-.1 1 .2 1.2.7.2.5.1 1.1-.3 1.4-2.5 2-4 5.1-4 8.6 0 5.5 4.5 10 10 10 3.5 0 6.6-1.5 8.6-4 .3-.4.9-.5 1.4-.3.5.2.8.7.7 1.2-.9 4.8-5 8.1-9.7 8.1z"/></svg>
+                </button>
+
+                <!-- Notifications Bell -->
+                <button class="btn-icon" onclick="toggleNotificationsPanel()" title="View Notifications" style="position:relative;">
+                    <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <span class="badge-dot" id="noti-dot" style="display:none;"></span>
+                </button>
+
+                <!-- User Profile / Login Button -->
+                <span id="user-display" style="display:none; font-weight:600; font-size:0.9rem; color:var(--color-secondary);"></span>
+                <button class="btn btn-primary" id="login-nav-btn" onclick="navigateTo('login')">Login</button>
+                <button class="btn btn-secondary" id="logout-nav-btn" onclick="logoutUser()" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ==========================================================================
+           1. HOME PAGE
+           ========================================================================== -->
+        <section id="page-home" class="app-page active-page">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <div class="badge badge-pending glow-text-secondary" style="margin-bottom: 16px;">AI-POWERED SCHEDULING</div>
+                    <h1>Customized Time Slot Delivery for Parcels</h1>
+                    <p class="hero-subtitle">Optimize logistics, eliminate missed deliveries, and reduce emissions with our simulated AI engine that coordinates delivery slots around your availability, local traffic patterns, and weather.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="navigateTo('login')">Book Delivery Now</button>
+                        <button class="btn btn-secondary" onclick="scrollToElement('features')">Explore Features</button>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="scene-container">
+                        <div class="orb-ring ring-1"></div>
+                        <div class="orb-ring ring-2"></div>
+                        <div class="floating-parcel">
+                            <svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM6.24 5h11.52l.83 1H5.41l.83-1zM5 19V8h14v11H5zm8-7h-2v3H8v2h3v3h2v-3h3v-2h-3z"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Counters -->
+            <div class="stats-grid">
+                <div class="glass-card stat-card">
+                    <h3 id="stat-deliveries">0</h3>
+                    <p>Total Deliveries Optimized</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <h3 id="stat-accuracy">0%</h3>
+                    <p>AI Slot Match Accuracy</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <h3 id="stat-efficiency">0%</h3>
+                    <p>Carbon Emissions Reduced</p>
+                </div>
+                <div class="glass-card stat-card">
+                    <h3 id="stat-rating">0.0</h3>
+                    <p>Average Customer Rating</p>
+                </div>
+            </div>
+
+            <!-- Features Grid Section -->
+            <div id="features" class="features-section">
+                <div class="section-header">
+                    <h2>Smart Features for Modern Logistics</h2>
+                    <p>Everything you need for hassle-free parcel dispatch and receipt scheduling.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                        </div>
+                        <h3>AI Predictive Matching</h3>
+                        <p>Our scoring algorithm processes traffic, weather delays, and your past delivery performance to identify slots where delivery success is above 90%.</p>
+                    </div>
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        </div>
+                        <h3>Live Tracking Map</h3>
+                        <p>Track your parcels in real-time. Watch our animated simulator trace the delivery route and display countdowns as the delivery approaches.</p>
+                    </div>
+                    <div class="glass-card feature-card">
+                        <div class="feature-icon-wrapper">
+                            <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                        </div>
+                        <h3>Flexible Booking Calendar</h3>
+                        <p>Select your dates and indicate your priorities (Normal, High, or Emergency) for specialized courier handling of items like food or medicine.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Working Process Flow -->
+            <div class="workflow-section">
+                <div class="section-header">
+                    <h2>How the AI Scheduling Engine Works</h2>
+                    <p>A transparent look at the calculations that determine the best times for your shipments.</p>
+                </div>
+                <div class="workflow-steps">
+                    <div class="glass-card step-card">
+                        <div class="step-num">01</div>
+                        <h4 style="margin-bottom: 8px;">Order Analysis</h4>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">We register item dimensions, weight, type (e.g. food/medicine), and your custom delivery urgency priority.</p>
+                    </div>
+                    <div class="glass-card step-card">
+                        <div class="step-num">02</div>
+                        <h4 style="margin-bottom: 8px;">External Fetching</h4>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">The simulation model analyzes hourly traffic volume levels and live meteorological predictions.</p>
+                    </div>
+                    <div class="glass-card step-card">
+                        <div class="step-num">03</div>
+                        <h4 style="margin-bottom: 8px;">History Matcher</h4>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">Your delivery habits are scored based on successful vs. missed slots, finding your peak availability hours.</p>
+                    </div>
+                    <div class="glass-card step-card">
+                        <div class="step-num">04</div>
+                        <h4 style="margin-bottom: 8px;">Slot Allocation</h4>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">An AI match score from 0-100 is generated. The slot with the highest value is booked with high confidence.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           2. CUSTOMER LOGIN & REGISTER
+           ========================================================================== -->
+        <section id="page-login" class="app-page">
+            <div class="login-section">
+                <div class="glass-card login-card ai-glow-border">
+                    <div class="login-header">
+                        <h2 id="login-title">Customer Login</h2>
+                        <p id="login-subtitle">Sign in to book and manage your deliveries</p>
+                    </div>
+                    <div class="login-tabs">
+                        <button class="login-tab-btn active" id="tab-login" onclick="toggleLoginTab('login')">Sign In</button>
+                        <button class="login-tab-btn" id="tab-register" onclick="toggleLoginTab('register')">Register</button>
+                    </div>
+                    
+                    <form id="auth-form" onsubmit="handleAuthSubmit(event)">
+                        <!-- Display name for registering -->
+                        <div class="form-group" id="group-name" style="display:none;">
+                            <label for="auth-name">Full Name</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                </span>
+                                <input type="text" id="auth-name" placeholder="John Doe">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="auth-username">Username</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                                </span>
+                                <input type="text" id="auth-username" required placeholder="username">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="auth-password">Password</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                </span>
+                                <input type="password" id="auth-password" required placeholder="••••••••">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; padding:12px; margin-top:10px;" id="auth-btn">Sign In</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           3. CUSTOMER DASHBOARD
+           ========================================================================== -->
+        <section id="page-customer-dashboard" class="app-page">
+            <div class="dashboard-grid">
+                
+                <!-- Welcome greeting & User Stats -->
+                <div class="glass-card dashboard-user-card dashboard-full-width">
+                    <div>
+                        <h2 style="font-size: 1.8rem; margin-bottom: 8px;">Welcome Back, <span id="dash-customer-name" style="color:var(--color-primary);">Customer</span>!</h2>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">You have <span id="dash-pending-count" style="font-weight: 700; color: var(--color-warning);">0</span> deliveries pending for today. What would you like to do next?</p>
+                    </div>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-primary" onclick="navigateTo('book-delivery')">Book Delivery</button>
+                        <button class="btn btn-secondary" onclick="navigateTo('track-parcel')">Track Parcel</button>
+                    </div>
+                </div>
+
+                <!-- AI Recommended Slot Banner -->
+                <div class="glass-card rec-banner dashboard-full-width">
+                    <div class="rec-banner-content">
+                        <div class="badge badge-completed" style="margin-bottom: 8px;">AI-SCHEDULER RECOMMENDATION</div>
+                        <h3 style="margin-bottom: 8px;">Your Optimal Time Window Today</h3>
+                        <p style="font-size:0.9rem; color:var(--text-secondary);">Calculated dynamically based on low morning traffic delays, clear weather, and your history profile.</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <span class="rec-banner-accent" id="dash-recommended-slot">10:00 AM - 12:00 PM</span>
+                        <div style="font-size:0.85rem; color:var(--text-secondary); margin-top:4px;">AI Confidence Score: <span id="dash-confidence" style="color:var(--color-success); font-weight:700;">94%</span></div>
+                    </div>
+                </div>
+
+                <!-- Today's Deliveries Card -->
+                <div class="glass-card">
+                    <div class="delivery-list-header">
+                        <h3>Today's Deliveries</h3>
+                        <button class="btn btn-secondary" style="padding:6px 12px; font-size:0.8rem;" onclick="navigateTo('delivery-history')">See All</button>
+                    </div>
+                    <div class="delivery-list" id="dash-today-deliveries">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Upcoming Deliveries Card -->
+                <div class="glass-card">
+                    <div class="delivery-list-header">
+                        <h3>Upcoming Scheduled Deliveries</h3>
+                    </div>
+                    <div class="delivery-list" id="dash-upcoming-deliveries">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           4. BOOK DELIVERY PAGE
+           ========================================================================== */ -->
+        <section id="page-book-delivery" class="app-page">
+            <div class="section-header">
+                <h2>New Parcel Reservation</h2>
+                <p>Provide details below and submit to trigger our simulated AI schedule algorithm.</p>
+            </div>
+            
+            <div class="booking-grid">
+                <!-- Booking Form -->
+                <div class="glass-card">
+                    <form id="booking-form" onsubmit="handleBookingSubmit(event)">
+                        <div class="booking-form-grid">
+                            
+                            <div class="form-group">
+                                <label for="book-customer-name">Sender/Receiver Name</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                    </span>
+                                    <input type="text" id="book-customer-name" required placeholder="Full Name">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-phone">Contact Number</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                                    </span>
+                                    <input type="tel" id="book-phone" required placeholder="10-digit number" pattern="[0-9]{10}">
+                                </div>
+                            </div>
+
+                            <div class="form-group booking-full-width">
+                                <label for="book-address">Delivery Address</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    </span>
+                                    <input type="text" id="book-address" required placeholder="House No, Street Name, City">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-parcel-type">Parcel Classification</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
+                                    </span>
+                                    <select id="book-parcel-type" required>
+                                        <option value="Document">Document</option>
+                                        <option value="Electronics">Electronics</option>
+                                        <option value="Food">Food</option>
+                                        <option value="Medicine">Medicine</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-weight">Parcel Weight (Kg)</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27z"/></svg>
+                                    </span>
+                                    <input type="number" id="book-weight" required min="0.1" max="100" step="0.1" placeholder="e.g. 2.5">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-priority">Delivery Priority</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    </span>
+                                    <select id="book-priority" required onchange="adjustUrgencyFields()">
+                                        <option value="Normal">Normal Urgency</option>
+                                        <option value="High">High Priority</option>
+                                        <option value="Emergency">Emergency Delivery</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="book-date">Preferred Delivery Date</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>
+                                    </span>
+                                    <input type="date" id="book-date" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group booking-full-width">
+                                <label for="book-time-pref">Customer Preferred Time Frame</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon">
+                                        <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                                    </span>
+                                    <select id="book-time-pref" required>
+                                        <option value="Morning">Morning (08:00 AM - 12:00 PM)</option>
+                                        <option value="Afternoon">Afternoon (12:00 PM - 04:00 PM)</option>
+                                        <option value="Evening">Evening (04:00 PM - 08:00 PM)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group booking-full-width">
+                                <label for="book-instructions">Special Instructions</label>
+                                <div class="input-wrapper">
+                                    <span class="input-icon" style="top:25px;">
+                                        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+                                    </span>
+                                    <textarea id="book-instructions" rows="3" placeholder="Gated community instructions, ring doorbell, etc." style="padding-left:42px;"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; padding:14px; margin-top:20px; font-size:1.05rem;">
+                            Generate AI Optimization & Save
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Simulation Settings Preview Card -->
+                <div class="glass-card ai-helper-card">
+                    <div style="border-bottom:1px solid var(--glass-border); padding-bottom:16px; margin-bottom:16px;">
+                        <h3 class="glow-text-secondary" style="font-size: 1.25rem; display:flex; align-items:center; gap:8px;">
+                            <svg viewBox="0 0 24 24" style="width:22px; height:22px; fill:currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm0-4h-2V7h2v8z"/></svg>
+                            Live Simulation Constants
+                        </h3>
+                        <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">These simulated external conditions feed directly into the AI score calculations.</p>
+                    </div>
+                    
+                    <div class="ai-stat-row">
+                        <span>Traffic Level</span>
+                        <span id="preview-traffic" style="color:var(--color-warning);">Medium (Evening High)</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span>Simulated Weather</span>
+                        <span id="preview-weather" style="color:var(--color-secondary);">Rainy (Delay +10m)</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span>User Success History</span>
+                        <span id="preview-history" style="color:var(--color-success);">85% Positive Slots</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span>Delivery Transit Distance</span>
+                        <span id="preview-distance">4.2 Km (Average)</span>
+                    </div>
+
+                    <!-- Visual illustration representing calculations -->
+                    <div style="margin-top:24px; padding:16px; background:rgba(0,0,0,0.2); border-radius:var(--radius-md); border:1px solid var(--glass-border);">
+                        <h4 style="font-size:0.85rem; margin-bottom:8px; color:var(--text-secondary);">Scheduling Logic Formula</h4>
+                        <p style="font-size:0.75rem; color:var(--text-muted); line-height:1.4;">
+                            \(Score = PriorityWeight + TrafficPenalty + WeatherPenalty + CustomerHistoryWeight - DistanceReduction\)
+                        </p>
+                        <p style="font-size:0.75rem; color:var(--text-muted); line-height:1.4; margin-top:8px;">
+                            Emergency priority adds massive weights to bypass heavy evening traffic constraints.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           5. TRACK PARCEL PAGE
+           ========================================================================== -->
+        <section id="page-track-parcel" class="app-page">
+            <div class="section-header">
+                <h2>Real-Time Parcel Monitor</h2>
+                <p>Locate your deliveries and view estimated arrival coordinates.</p>
+            </div>
+
+            <!-- Track search bar -->
+            <div class="glass-card track-card">
+                <div class="track-input-group">
+                    <div class="input-wrapper" style="flex:1;">
+                        <span class="input-icon">
+                            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        </span>
+                        <input type="text" id="track-id-input" placeholder="Enter Tracking ID (e.g. TRK-123456)">
+                    </div>
+                    <button class="btn btn-primary" onclick="handleTrackSearch()">Locate Package</button>
+                </div>
+            </div>
+
+            <!-- Track Visuals Container -->
+            <div id="track-details-container" style="display:none;">
+                <div class="dashboard-grid">
+                    
+                    <!-- Progress Timeline and simulated driving -->
+                    <div class="glass-card">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                            <div>
+                                <h3 id="track-parcel-label">Parcel Details</h3>
+                                <p style="font-size:0.85rem; color:var(--text-muted);" id="track-parcel-id-display">TRK-100293</p>
+                            </div>
+                            <div class="badge badge-completed" id="track-status-badge">Out For Delivery</div>
+                        </div>
+
+                        <!-- Simulation Canvas Road Area -->
+                        <div class="simulation-container">
+                            <div class="simulation-road">
+                                <div class="simulation-road-stripes"></div>
+                            </div>
+                            <!-- Vehicle graphic -->
+                            <div class="simulation-vehicle" id="sim-vehicle">
+                                <svg viewBox="0 0 24 24"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4zM6 18.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm12 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-5H3V6h12v7h6v.5z"/></svg>
+                            </div>
+                            <!-- Destination house icon -->
+                            <div class="simulation-destination">
+                                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Progress Steps Timeline -->
+                        <div class="timeline-container">
+                            <div class="timeline-horizontal">
+                                <div class="timeline-line-bg"></div>
+                                <div class="timeline-line-fill" id="track-timeline-fill" style="width: 50%;"></div>
+                                
+                                <div class="timeline-step completed" id="step-ordered">
+                                    <div class="timeline-step-icon">
+                                        <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                                    </div>
+                                    <h4>Ordered</h4>
+                                </div>
+                                <div class="timeline-step completed" id="step-packed">
+                                    <div class="timeline-step-icon">
+                                        <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg>
+                                    </div>
+                                    <h4>Packed</h4>
+                                </div>
+                                <div class="timeline-step active" id="step-transit">
+                                    <div class="timeline-step-icon">
+                                        <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M20 8h-3V4H3c-1.1 0-2 .9-2 2v11h2c0 1.66 1.34 3 3 3s3-1.34 3-3h6c0 1.66 1.34 3 3 3s3-1.34 3-3h2v-5l-3-4z"/></svg>
+                                    </div>
+                                    <h4>Transit</h4>
+                                </div>
+                                <div class="timeline-step" id="step-nearby">
+                                    <div class="timeline-step-icon">
+                                        <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                    </div>
+                                    <h4>Nearby</h4>
+                                </div>
+                                <div class="timeline-step" id="step-delivered">
+                                    <div class="timeline-step-icon">
+                                        <svg viewBox="0 0 24 24" style="width:20px; height:20px; fill:currentColor;"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                    </div>
+                                    <h4>Delivered</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ETA & QR Receipt -->
+                    <div class="glass-card" style="display:flex; flex-direction:column; gap:20px;">
+                        <div class="countdown-box">
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:8px;">Expected Arrival Countdown</p>
+                            <div class="countdown-timer" id="track-countdown">00:00:00</div>
+                        </div>
+
+                        <div class="ai-stat-row">
+                            <span>Delivery Slot</span>
+                            <span id="track-slot-val" style="font-weight:700; color:var(--color-secondary);">10:00 AM - 11:00 AM</span>
+                        </div>
+                        <div class="ai-stat-row">
+                            <span>ETA Timestamp</span>
+                            <span id="track-eta-val">10:24 AM (Forecasted)</span>
+                        </div>
+                        <div class="ai-stat-row">
+                            <span>AI confidence score</span>
+                            <span id="track-confidence-val" style="color:var(--color-success);">94% Match</span>
+                        </div>
+
+                        <!-- Dynamic QR Code generator Canvas and receipt print trigger -->
+                        <div style="text-align:center; padding:16px; background:rgba(0,0,0,0.1); border-radius:var(--radius-md); border:1px solid var(--glass-border);">
+                            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">Package Token QR Verification</p>
+                            <canvas id="qr-code-canvas" width="128" height="128" style="margin: 0 auto; background:#FFFFFF; padding:6px; border-radius:8px; display:block;"></canvas>
+                            <button class="btn btn-secondary" style="margin-top:16px; width:100%;" onclick="triggerReceiptPrint()">
+                                Download PDF Invoice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tracking Placeholder when nothing searched -->
+            <div id="track-placeholder" class="glass-card" style="text-align:center; padding:60px 20px;">
+                <svg viewBox="0 0 24 24" style="width:60px; height:60px; fill:var(--text-muted); margin-bottom:16px;"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <h3>Search your package to monitor transit</h3>
+                <p style="color:var(--text-secondary); max-width:400px; margin: 8px auto 0 auto; font-size:0.9rem;">Submit a Tracking ID to display simulated route animations, timers, and downloadable PDF invoices.</p>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           6. DELIVERY HISTORY
+           ========================================================================== -->
+        <section id="page-delivery-history" class="app-page">
+            <div class="section-header">
+                <h2>Shipment Repository</h2>
+                <p>Review completed or active requests. Search or filter details instantly.</p>
+            </div>
+
+            <div class="glass-card">
+                <!-- Search & Filters -->
+                <div class="history-filters">
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                        </span>
+                        <input type="text" id="history-search" placeholder="Search by name, address, ID..." oninput="handleHistoryFiltersChange()">
+                    </div>
+                    
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+                        </span>
+                        <select id="history-filter-status" onchange="handleHistoryFiltersChange()">
+                            <option value="All">All Statuses</option>
+                            <option value="Pending">Pending Approval</option>
+                            <option value="Transit">In Transit</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="input-wrapper">
+                        <span class="input-icon">
+                            <svg viewBox="0 0 24 24"><path d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"/></svg>
+                        </span>
+                        <select id="history-sort" onchange="handleHistoryFiltersChange()">
+                            <option value="newest">Newest Bookings</option>
+                            <option value="oldest">Oldest Bookings</option>
+                            <option value="weight-desc">Weight (High to Low)</option>
+                            <option value="weight-asc">Weight (Low to High)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Table Container -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tracking ID</th>
+                                <th>Recipient</th>
+                                <th>Parcel Details</th>
+                                <th>Urgency</th>
+                                <th>AI Target Slot</th>
+                                <th>Delivery Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- Populated dynamically by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination footer -->
+                <div class="pagination">
+                    <button class="btn btn-secondary" id="btn-page-prev" onclick="handleHistoryPageChange(-1)" style="padding:6px 12px;">Prev</button>
+                    <span id="history-page-info">Page 1 of 1</span>
+                    <button class="btn btn-secondary" id="btn-page-next" onclick="handleHistoryPageChange(1)" style="padding:6px 12px;">Next</button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           7. AI ANALYTICS PAGE (HTML CANVAS CHARTS)
+           ========================================================================== -->
+        <section id="page-ai-analytics" class="app-page">
+            <div class="section-header">
+                <h2>AI Logistics Analytics</h2>
+                <p>Inspect system scheduling statistics dynamically rendered with pure HTML5 Canvas widgets.</p>
+            </div>
+
+            <div class="analytics-grid">
+                
+                <!-- Chart 1: Deliveries Per Day -->
+                <div class="glass-card chart-card">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Daily Bookings Count (Line Chart)</h3>
+                    <div class="chart-canvas-container">
+                        <canvas id="chart-daily-deliveries"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 2: Most Preferred Slot -->
+                <div class="glass-card chart-card">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Most Preferred Time Slots (Bar Chart)</h3>
+                    <div class="chart-canvas-container">
+                        <canvas id="chart-preferred-slots"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 3: Traffic Analysis & Delay -->
+                <div class="glass-card chart-card">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Average Delay by Traffic Density</h3>
+                    <div class="chart-canvas-container">
+                        <canvas id="chart-traffic-analysis"></canvas>
+                    </div>
+                </div>
+
+                <!-- Chart 4: Success & Satisfaction Rates -->
+                <div class="glass-card chart-card">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Delivery Success Rate Profile (Pie Chart)</h3>
+                    <div class="chart-canvas-container">
+                        <canvas id="chart-success-rate"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           8. ADMIN PANEL
+           ========================================================================== -->
+        <section id="page-admin-panel" class="app-page">
+            <div class="section-header">
+                <h2>Control Console (Admin Dashboard)</h2>
+                <p>Authorize delivery slots, reject bookings, and review global system match margins.</p>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="admin-metrics">
+                <div class="glass-card metric-box">
+                    <h4>Total Shipments</h4>
+                    <div class="metric-value" id="admin-total-val" style="color:var(--text-primary);">0</div>
+                </div>
+                <div class="glass-card metric-box">
+                    <h4>Pending Action</h4>
+                    <div class="metric-value" id="admin-pending-val" style="color:var(--color-warning);">0</div>
+                </div>
+                <div class="glass-card metric-box">
+                    <h4>Dispatched / Transit</h4>
+                    <div class="metric-value" id="admin-transit-val" style="color:var(--color-secondary);">0</div>
+                </div>
+                <div class="glass-card metric-box">
+                    <h4>Delivered</h4>
+                    <div class="metric-value" id="admin-completed-val" style="color:var(--color-success);">0</div>
+                </div>
+                <div class="glass-card metric-box">
+                    <h4>AI Engine Match Rate</h4>
+                    <div class="metric-value" id="admin-ai-val" style="color:var(--color-primary);">91.2%</div>
+                </div>
+            </div>
+
+            <!-- Admin Action Table -->
+            <div class="glass-card">
+                <h3 style="margin-bottom: 16px;">Global Deliveries Queue</h3>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Recipient</th>
+                                <th>Classification</th>
+                                <th>Weight</th>
+                                <th>Priority</th>
+                                <th>Recommended Slot</th>
+                                <th>Status</th>
+                                <th>Control Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-table-body">
+                            <!-- Populated dynamically by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ==========================================================================
+           9. SETTINGS PAGE
+           ========================================================================== -->
+        <section id="page-settings" class="app-page">
+            <div class="section-header">
+                <h2>Application Preferences</h2>
+                <p>Modify display schemes, profile details, and voice assistants.</p>
+            </div>
+
+            <div class="settings-grid">
+                
+                <!-- Display preferences -->
+                <div class="glass-card settings-card">
+                    <h3>Environment Configuration</h3>
+                    
+                    <div class="settings-option">
+                        <div>
+                            <h4>Light Palette Theme</h4>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Adjust layout backgrounds and card glow styles.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="theme-switch" onchange="handleThemeSwitchToggle()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-option">
+                        <div>
+                            <h4>Browser Toast Popups</h4>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Show popup confirmations on actions.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="noti-switch" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="settings-option">
+                        <div>
+                            <h4>Voice Readout Assistant</h4>
+                            <p style="font-size:0.8rem; color:var(--text-muted);">Uses Text-to-Speech API to dictate parcel updates.</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="voice-switch" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div style="margin-top:30px;">
+                        <button class="btn btn-danger" style="width:100%;" onclick="resetAppDatabase()">
+                            Reset App Storage Cache
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Profile Customization -->
+                <div class="glass-card settings-card">
+                    <h3>Modify User Profile</h3>
+                    
+                    <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+                        <div class="form-group">
+                            <label for="settings-name">Full Name</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                                </span>
+                                <input type="text" id="settings-name" required placeholder="User Name">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settings-phone">Default Phone Number</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                                </span>
+                                <input type="tel" id="settings-phone" placeholder="Contact number" pattern="[0-9]{10}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="settings-address">Default Delivery Address</label>
+                            <div class="input-wrapper">
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                                </span>
+                                <input type="text" id="settings-address" placeholder="Address">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:20px;">
+                            Save Profile Updates
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer style="margin-top:60px; padding:30px 0; border-top:1px solid var(--glass-border); background:rgba(0,0,0,0.15); text-align:center;">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <p style="font-size:0.85rem; color:var(--text-muted);">&copy; 2026 LogiAI Smart Delivery Platform. All rights reserved.</p>
+            <p style="font-size:0.85rem; color:var(--text-muted);">College Mini-Project Demonstration</p>
+        </div>
+    </footer>
+
+
+    <!-- ==========================================================================
+       AI CALCULATION SIMULATOR MODAL OVERLAY
+       ========================================================================== -->
+    <div class="modal-overlay" id="modal-ai-calculation">
+        <div class="glass-card modal-container">
+            <div class="ai-processing-body" id="ai-modal-processing">
+                <div class="ai-orb-loader"></div>
+                <div class="processing-step-text" id="ai-loading-step">Analyzing Coordinates...</div>
+                <div class="processing-progress-bar">
+                    <div class="processing-progress-fill" id="ai-progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Complete Calculated result display panel -->
+            <div id="ai-modal-result" style="display:none; padding:10px;">
+                <div class="ai-result-header">
+                    <div>
+                        <h2 style="color:var(--color-primary); font-size:1.6rem;">Slot Optimized!</h2>
+                        <p style="font-size:0.85rem; color:var(--text-muted);" id="ai-result-trk-id">Tracking ID: TRK-100293</p>
+                    </div>
+                    <div class="ai-result-score-circle">
+                        <h3 id="ai-result-score-val">94</h3>
+                        <p>AI Score</p>
+                    </div>
+                </div>
+
+                <div class="glass-card" style="background:rgba(0,0,0,0.2); border:1px solid var(--glass-border); margin-bottom:20px;">
+                    <div class="ai-stat-row">
+                        <span>Recommended Window</span>
+                        <span id="ai-result-slot" style="color:var(--color-secondary); font-weight:700;">10:00 AM - 11:00 AM</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span>Confidence Percentage</span>
+                        <span id="ai-result-confidence" style="color:var(--color-success); font-weight:700;">94% Match</span>
+                    </div>
+                    <div class="ai-stat-row">
+                        <span>Estimated Arrival Time</span>
+                        <span id="ai-result-eta">10:24 AM</span>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:24px;">
+                    <h4 style="margin-bottom:12px; font-size:0.95rem;">Optimization Justifications:</h4>
+                    <div id="ai-result-reasons">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:16px;">
+                    <button class="btn btn-primary" style="flex:1;" onclick="closeAIModalAndRedirect()">Proceed to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+       BONUS FEATURE: INTERACTIVE CHATBOT SYSTEM
+       ========================================================================== -->
+    <div class="chatbot-widget">
+        <!-- Floating bubble button -->
+        <div class="chatbot-toggle" onclick="toggleChatbotWindow()" title="Chat with LogiAI Assistant">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        </div>
+
+        <!-- Chat popup window -->
+        <div class="chatbot-window" id="chatbot-window">
+            <div class="chatbot-header">
+                <h4>
+                    <span class="chatbot-header-status"></span>
+                    LogiAI Virtual Assistant
+                </h4>
+                <button class="btn-icon" style="width:24px; height:24px; border:none; background:transparent; color:#FFFFFF;" onclick="toggleChatbotWindow()">✕</button>
+            </div>
+            
+            <!-- Messages flow -->
+            <div class="chatbot-messages" id="chatbot-messages-box">
+                <div class="chat-msg incoming">
+                    Hello! I'm your LogiAI logistics assistant. Ask me questions about:
+                    <div style="margin-top:8px; display:flex; flex-direction:column; gap:4px;">
+                        <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem; justify-content:flex-start;" onclick="sendBotCommand('How does the AI recommend slots?')">How does the AI recommend slots?</button>
+                        <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem; justify-content:flex-start;" onclick="sendBotCommand('How can I track a package?')">How can I track a package?</button>
+                        <button class="btn btn-secondary" style="padding:4px 8px; font-size:0.75rem; justify-content:flex-start;" onclick="sendBotCommand('Show my recommended slot today')">Show my recommended slot today</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input bar -->
+            <div class="chatbot-input-area">
+                <input type="text" id="chatbot-input-msg" placeholder="Type message..." onkeydown="if(event.key === 'Enter') handleSendBotMessage()">
+                <button class="btn btn-primary" style="padding:8px 12px;" onclick="handleSendBotMessage()">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================================================
+       BONUS FEATURE: PRINTABLE RECEIPT TEMPLATE (HIDDEN DOM STRUCTURE)
+       ========================================================================== -->
+    <div class="receipt-printable" id="receipt-printable-invoice">
+        <div class="receipt-header">
+            <div>
+                <h2>LogiAI Smart Logistics Invoice</h2>
+                <p>AI-Optimized Slot Schedule Booking</p>
+            </div>
+            <div style="text-align: right;">
+                <h3>Receipt Receipt No.</h3>
+                <p id="print-receipt-no">REC-9920391</p>
+            </div>
+        </div>
+
+        <table class="receipt-details-table">
+            <tr>
+                <td>Tracking ID</td>
+                <td id="print-tracking-id">TRK-100203</td>
+            </tr>
+            <tr>
+                <td>Recipient Name</td>
+                <td id="print-recipient-name">John Doe</td>
+            </tr>
+            <tr>
+                <td>Delivery Address</td>
+                <td id="print-address">123 Logistics St, Tech City</td>
+            </tr>
+            <tr>
+                <td>Contact Number</td>
+                <td id="print-phone">1234567890</td>
+            </tr>
+            <tr>
+                <td>Parcel Category</td>
+                <td id="print-parcel-type">Electronics</td>
+            </tr>
+            <tr>
+                <td>Parcel Weight</td>
+                <td id="print-weight">2.5 Kg</td>
+            </tr>
+            <tr>
+                <td>Delivery Priority</td>
+                <td id="print-priority">High Priority</td>
+            </tr>
+            <tr>
+                <td>Scheduled Date</td>
+                <td id="print-date">2026-08-10</td>
+            </tr>
+            <tr>
+                <td>Recommended AI Time Slot</td>
+                <td id="print-recommended-slot" style="font-weight: bold; color: #4F46E5;">10:00 AM - 11:00 AM</td>
+            </tr>
+            <tr>
+                <td>AI Schedule Confidence Score</td>
+                <td id="print-confidence">94% Accuracy Match</td>
+            </tr>
+            <tr>
+                <td>Estimated Window Arrival</td>
+                <td id="print-eta">10:24 AM</td>
+            </tr>
+            <tr>
+                <td>Status Details</td>
+                <td id="print-status" style="text-transform: uppercase;">Approved</td>
+            </tr>
+        </table>
+
+        <div class="receipt-qr-container">
+            <div>
+                <h4>Receipt Verification Instructions</h4>
+                <p style="font-size: 0.85rem; color: #475569; max-width: 400px; margin-top:6px;">
+                    Scan the verification QR code at the time of courier arrival. The courier will verify the token on their mobile terminal to complete secure parcel dispatch.
+                </p>
+            </div>
+            <!-- Standard Image or QR mockup -->
+            <canvas id="qr-code-canvas-print" width="128" height="128" style="background:#FFFFFF; padding:4px; border:1px solid #E2E8F0;"></canvas>
+        </div>
+
+        <div class="receipt-footer">
+            <p>Thank you for choosing LogiAI Smart Logistics. Environment-friendly route optimizations accomplished automatically.</p>
+        </div>
+    </div>
+
+
+    <!-- JavaScript Controllers -->
+    <script src="script.js"></script>
+</body>
+</html>
